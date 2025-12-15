@@ -402,24 +402,6 @@ def run_kinetic_monte_carlo():
 def main():
     plt.style.use('seaborn-v0_8-darkgrid')
 
-    print("=" * 80)
-    print("ЛАБОРАТОРНАЯ РАБОТА №5: СТОХАСТИЧЕСКИЕ МЕТОДЫ")
-    print("=" * 80)
-
-    print("\n" + "=" * 80)
-    print("ЧАСТЬ 1: САНКТ-ПЕТЕРБУРГСКИЙ ПАРАДОКС")
-    print("=" * 80)
-    run_saint_petersburg_paradox()
-
-    print("\n" + "=" * 80)
-    print("ЧАСТЬ 2: КИНЕТИЧЕСКИЙ МЕТОД МОНТЕ-КАРЛО")
-    print("=" * 80)
-    run_kinetic_monte_carlo()
-
-    print("\n" + "=" * 80)
-    print("ЛАБОРАТОРНАЯ РАБОТА ВЫПОЛНЕНА")
-    print("=" * 80)
-
 
 if __name__ == "__main__":
     main()
