@@ -3,24 +3,19 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-# ==================== Часть 1: Санкт-Петербургский парадокс ====================
-
 def play_game(cost, deposit):
-    """Одна игра Санкт-Петербургского парадокса"""
     initial_deposit = deposit
     deposit_history = [initial_deposit]
 
-    # Оплата входа в игру
     deposit -= cost
     deposit_history.append(deposit)
 
-    # Подбрасывание монеты до выпадения решки
     toss_count = 0
     win_amount = 0
 
     while True:
         toss_count += 1
-        if random.choice([True, False]):  # Выпала решка
+        if random.choice([True, False]):
             win_amount = 2 ** toss_count
             deposit += win_amount
             deposit_history.append(deposit)
@@ -31,7 +26,6 @@ def play_game(cost, deposit):
 
 
 def run_saint_petersburg_paradox():
-    """Выполнение первой части лабораторной работы: Санкт-Петербургский парадокс"""
     COST_PER_GAME = 20
     DEPOSITS = [100, 1000, 100_000, 1_000_000]
 
@@ -45,7 +39,6 @@ def run_saint_petersburg_paradox():
         print(f"АНАЛИЗ ДЛЯ ДЕПОЗИТА: {deposit:,} РУБ")
         print(f"{'=' * 80}")
 
-        # Пункт 1: График динамики одной игры
         print("\n1. График динамики одной игры:")
         deposit_history, tosses, win_amount, result = play_game(COST_PER_GAME, deposit)
 
@@ -63,7 +56,6 @@ def run_saint_petersburg_paradox():
         plt.tight_layout()
         plt.show()
 
-        # Пункт 2: Для 20 игр - столбчатая диаграмма
         print("\n2. Столбчатая диаграмма для 20 игр:")
         tosses_list = []
         results_list = []
@@ -73,7 +65,6 @@ def run_saint_petersburg_paradox():
             tosses_list.append(tosses)
             results_list.append(result)
 
-        # Построение столбчатой диаграммы
         fig, ax = plt.subplots(figsize=(12, 6))
         games = list(range(1, 21))
         colors = ['green' if res else 'red' for res in results_list]
@@ -85,7 +76,6 @@ def run_saint_petersburg_paradox():
         ax.grid(True, alpha=0.3, axis='y')
         ax.set_xticks(games)
 
-        # Целочисленные значения на оси Y
         max_tosses = max(tosses_list) if tosses_list else 1
         ax.set_yticks(range(0, max_tosses + 2))
 
@@ -103,7 +93,6 @@ def run_saint_petersburg_paradox():
         plt.tight_layout()
         plt.show()
 
-        # Пункт 3: Для 1000 игр - статистика в виде круговой диаграммы
         print("\n3. Статистика для 1000 игр:")
         wins = losses = total_win_amount = 0
 
@@ -117,7 +106,6 @@ def run_saint_petersburg_paradox():
         loss_percentage = losses / 10
         avg_win = total_win_amount / 1000
 
-        # Круговая диаграмма
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 6), gridspec_kw={'width_ratios': [2, 1]})
 
         labels = [f'Выигрыши\n{wins} игр', f'Проигрыши\n{losses} игр']
@@ -162,11 +150,7 @@ def run_saint_petersburg_paradox():
         plt.show()
 
 
-# ==================== Часть 2: Кинетический метод Монте-Карло ====================
-
 def kinetic_monte_carlo(A0, B0, k1, k2, max_time=30, num_simulations=5):
-    """Кинетический метод Монте-Карло для системы двух веществ"""
-
     print(f"Параметры моделирования:")
     print(f"Начальные значения: A0 = {A0}, B0 = {B0}")
     print(f"Константы скоростей: k1 = {k1}, k2 = {k2}")
@@ -179,22 +163,18 @@ def kinetic_monte_carlo(A0, B0, k1, k2, max_time=30, num_simulations=5):
     for sim in range(num_simulations):
         print(f"\nСимуляция {sim + 1}/{num_simulations}...")
 
-        # Начальные значения
         A = A0
         B = B0
         time = 0
 
-        # Списки для хранения истории
         A_history = [A]
         B_history = [B]
         time_history = [time]
 
-        # Главный цикл моделирования
         step = 0
         while time < max_time and (A > 0 or B > 0):
             step += 1
 
-            # Вычисляем интенсивности реакций
             a1 = k1 * A
             a2 = k2 * B
             a0 = a1 + a2
@@ -202,23 +182,17 @@ def kinetic_monte_carlo(A0, B0, k1, k2, max_time=30, num_simulations=5):
             if a0 == 0:
                 break
 
-            # Генерируем случайные числа
             r1 = random.random()
             r2 = random.random()
 
-            # Время до следующего события
             tau = -np.log(r1) / a0
             time += tau
 
-            # Выбираем какая реакция происходит
             if r2 * a0 < a1:
-                # Происходит реакция 1: A уменьшается
                 A -= 1
             else:
-                # Происходит реакция 2: B уменьшается
                 B -= 1
 
-            # Сохраняем состояние
             A_history.append(A)
             B_history.append(B)
             time_history.append(time)
@@ -232,10 +206,8 @@ def kinetic_monte_carlo(A0, B0, k1, k2, max_time=30, num_simulations=5):
 
 
 def plot_individual_simulation(times, A, B, sim_num, k1, k2):
-    """Построение графика для одной симуляции"""
     plt.figure(figsize=(10, 6))
 
-    # График веществ A и B
     plt.step(times, A, where='post', linewidth=2, color='blue', label=f'A(t)')
     plt.step(times, B, where='post', linewidth=2, color='red', label=f'B(t)')
 
@@ -248,7 +220,6 @@ def plot_individual_simulation(times, A, B, sim_num, k1, k2):
     plt.tight_layout()
     plt.show()
 
-    # Вывод дополнительной информации
     print(f"\nСтатистика симуляции {sim_num}:")
     print(f"  Начальные значения: A={A[0]}, B={B[0]}")
     print(f"  Конечные значения: A={A[-1]}, B={B[-1]}")
@@ -258,12 +229,10 @@ def plot_individual_simulation(times, A, B, sim_num, k1, k2):
 
 
 def plot_comparison_simulations(all_results, k1, k2):
-    """Сравнительный график всех симуляций"""
     plt.figure(figsize=(12, 8))
 
     colors = ['blue', 'green', 'red', 'purple', 'orange']
 
-    # График вещества A во всех симуляциях
     plt.subplot(2, 1, 1)
     for i, (times, A, B) in enumerate(all_results):
         plt.step(times, A, where='post', linewidth=1.5, alpha=0.7,
@@ -276,7 +245,6 @@ def plot_comparison_simulations(all_results, k1, k2):
     plt.grid(True, alpha=0.3)
     plt.legend(fontsize=11)
 
-    # График вещества B во всех симуляциях
     plt.subplot(2, 1, 2)
     for i, (times, A, B) in enumerate(all_results):
         plt.step(times, B, where='post', linewidth=1.5, alpha=0.7,
@@ -294,31 +262,25 @@ def plot_comparison_simulations(all_results, k1, k2):
 
 
 def plot_statistical_analysis(all_results, A0, B0, k1, k2):
-    """Статистический анализ всех симуляций"""
     plt.figure(figsize=(12, 8))
 
-    # Создаем общую временную сетку
     max_time = max([max(t) for t, A, B in all_results])
     common_time = np.linspace(0, max_time, 1000)
 
-    # Интерполируем данные на общую сетку
     A_interpolated = []
     B_interpolated = []
 
     for times, A, B in all_results:
-        # Интерполяция на общую временную сетку
         A_interp = np.interp(common_time, times, A, right=A[-1])
         B_interp = np.interp(common_time, times, B, right=B[-1])
         A_interpolated.append(A_interp)
         B_interpolated.append(B_interp)
 
-    # Вычисляем средние и стандартные отклонения
     A_mean = np.mean(A_interpolated, axis=0)
     A_std = np.std(A_interpolated, axis=0)
     B_mean = np.mean(B_interpolated, axis=0)
     B_std = np.std(B_interpolated, axis=0)
 
-    # График средних значений с доверительным интервалом
     plt.subplot(2, 1, 1)
     plt.plot(common_time, A_mean, 'b-', linewidth=3, label='A (среднее)')
     plt.fill_between(common_time, A_mean - A_std, A_mean + A_std,
@@ -335,7 +297,6 @@ def plot_statistical_analysis(all_results, A0, B0, k1, k2):
     plt.grid(True, alpha=0.3)
     plt.legend(fontsize=11)
 
-    # Теоретические кривые (экспоненциальный распад)
     plt.subplot(2, 1, 2)
     A_theory = A0 * np.exp(-k1 * common_time)
     B_theory = B0 * np.exp(-k2 * common_time)
@@ -355,12 +316,10 @@ def plot_statistical_analysis(all_results, A0, B0, k1, k2):
     plt.tight_layout()
     plt.show()
 
-    # Вывод статистики
     print("\n" + "=" * 70)
     print("СТАТИСТИЧЕСКИЙ АНАЛИЗ ВСЕХ СИМУЛЯЦИЙ")
     print("=" * 70)
 
-    # Конечные значения
     final_A = [A[-1] for _, A, _ in all_results]
     final_B = [B[-1] for _, _, B in all_results]
 
@@ -372,19 +331,16 @@ def plot_statistical_analysis(all_results, A0, B0, k1, k2):
     print(f"  Среднее: {np.mean(final_B):.1f} ± {np.std(final_B):.1f}")
     print(f"  Минимум: {min(final_B)}, Максимум: {max(final_B)}")
 
-    # Время полного/частичного расходования
     times_to_half_A = []
     times_to_half_B = []
 
     for times, A, B in all_results:
-        # Время, когда A достигает половины начального значения
         half_A = A0 / 2
         for t, a in zip(times, A):
             if a <= half_A:
                 times_to_half_A.append(t)
                 break
 
-        # Время, когда B достигает половины начального значения
         half_B = B0 / 2
         for t, b in zip(times, B):
             if b <= half_B:
@@ -399,34 +355,28 @@ def plot_statistical_analysis(all_results, A0, B0, k1, k2):
         print(f"\nВремя до уменьшения B вдвое:")
         print(f"  Среднее: {np.mean(times_to_half_B):.2f} ± {np.std(times_to_half_B):.2f}")
 
-    # Теоретические времена полураспада
     print(f"\nТеоретические времена полураспада:")
     print(f"  Вещество A: t½ = ln(2)/k1 = {np.log(2) / k1:.2f}")
     print(f"  Вещество B: t½ = ln(2)/k2 = {np.log(2) / k2:.2f}")
 
 
 def run_kinetic_monte_carlo():
-    """Выполнение второй части лабораторной работы: Кинетический метод Монте-Карло"""
     print("\n" + "=" * 80)
     print("КИНЕТИЧЕСКИЙ МЕТОД МОНТЕ-КАРЛО - ВАРИАНТ 4")
     print("=" * 80)
 
-    # Параметры для 4-го варианта
     A0 = 500
     B0 = 200
-    k1 = 0.9  # Константа скорости для вещества A
-    k2 = 0.4  # Константа скорости для вещества B
+    k1 = 0.9
+    k2 = 0.4
 
-    # Запускаем моделирование
     print(f"\nЗАПУСК МОДЕЛИРОВАНИЯ С ПАРАМЕТРАМИ:")
     print(f"A0 = {A0}, B0 = {B0}")
     print(f"k1 = {k1}, k2 = {k2}")
     print("=" * 70)
 
-    # Выполняем 5 независимых симуляций
     all_results = kinetic_monte_carlo(A0, B0, k1, k2, max_time=30, num_simulations=5)
 
-    # 1. Показываем графики каждой симуляции по отдельности
     print("\n" + "=" * 70)
     print("ГРАФИКИ ОТДЕЛЬНЫХ СИМУЛЯЦИЙ")
     print("=" * 70)
@@ -434,13 +384,11 @@ def run_kinetic_monte_carlo():
     for i, (times, A, B) in enumerate(all_results):
         plot_individual_simulation(times, A, B, i + 1, k1, k2)
 
-    # 2. Сравнительный график всех симуляций
     print("\n" + "=" * 70)
     print("СРАВНИТЕЛЬНЫЙ ГРАФИК ВСЕХ СИМУЛЯЦИЙ")
     print("=" * 70)
     plot_comparison_simulations(all_results, k1, k2)
 
-    # 3. Статистический анализ
     print("\n" + "=" * 70)
     print("СТАТИСТИЧЕСКИЙ АНАЛИЗ И СРАВНЕНИЕ С ТЕОРИЕЙ")
     print("=" * 70)
@@ -451,23 +399,18 @@ def run_kinetic_monte_carlo():
     print("=" * 70)
 
 
-# ==================== Главная функция ====================
-
 def main():
-    """Главная функция, выполняющая обе части лабораторной работы"""
     plt.style.use('seaborn-v0_8-darkgrid')
 
     print("=" * 80)
     print("ЛАБОРАТОРНАЯ РАБОТА №5: СТОХАСТИЧЕСКИЕ МЕТОДЫ")
     print("=" * 80)
 
-    # Часть 1: Санкт-Петербургский парадокс
     print("\n" + "=" * 80)
     print("ЧАСТЬ 1: САНКТ-ПЕТЕРБУРГСКИЙ ПАРАДОКС")
     print("=" * 80)
     run_saint_petersburg_paradox()
 
-    # Часть 2: Кинетический метод Монте-Карло
     print("\n" + "=" * 80)
     print("ЧАСТЬ 2: КИНЕТИЧЕСКИЙ МЕТОД МОНТЕ-КАРЛО")
     print("=" * 80)
@@ -478,6 +421,5 @@ def main():
     print("=" * 80)
 
 
-# Запуск программы
 if __name__ == "__main__":
     main()
